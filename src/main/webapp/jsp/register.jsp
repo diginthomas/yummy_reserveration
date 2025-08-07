@@ -235,25 +235,42 @@
 </head>
 
 <body class="index-page">
+<%@ page import="com.groupd.booking.model.User" %>
+<%
+    User user = (User) session.getAttribute("user");
+%>
 
 <header id="header" class="header d-flex align-items-center sticky-top bg-light shadow-sm">
     <div class="container position-relative d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/index.html" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
+        <a href="${pageContext.request.contextPath}" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
             <h1 class="sitename m-0 fs-3 fw-bold text-primary">Yummy<span class="text-danger">.</span></h1>
         </a>
+
         <nav id="navmenu" class="navmenu">
             <ul class="nav">
-                <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#hero" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#about" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#contact" class="nav-link">Contact</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link ">Home</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}#about" class="nav-link">About</a></li>
 
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a></li>
+                <% if (user == null) { %>
+                <!-- If user not logged in -->
                 <li class="nav-item"><a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a></li>
                 <li class="nav-item"><a href="${pageContext.request.contextPath}/register" class="nav-link active">Register</a></li>
+                <% } else { %>
+                <!-- If user is logged in -->
+
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/logout" class="nav-link">Logout</a></li>
+                <% } %>
             </ul>
         </nav>
-        <a class="btn btn-primary" href="${pageContext.request.contextPath}/index.html#book-a-table">Book a Table</a>
+
+        <% if (user != null) { %>
+        <!-- Show only when logged in -->
+        <a class="btn btn-primary" href="${pageContext.request.contextPath}/book">Book a Table</a>
+        <% } %>
     </div>
 </header>
+
 
 <main class="main">
 
@@ -308,7 +325,6 @@
     </section>
 
 </main>
-
 <footer id="footer" class="footer bg-dark text-light pt-5">
     <div class="container">
         <div class="row gy-3">
@@ -316,8 +332,8 @@
                 <i class="bi bi-geo-alt icon fs-3 me-2"></i>
                 <div class="address">
                     <h4>Address</h4>
-                    <p>A108 Adam Street</p>
-                    <p>New York, NY 535022</p>
+                    <p>456 Lakeshore Road E</p>
+                    <p>Mississauga, ON L5G 1H4, Canada</p>
                 </div>
             </div>
 
@@ -326,8 +342,8 @@
                 <div>
                     <h4>Contact</h4>
                     <p>
-                        <strong>Phone:</strong> <span>+1 5589 55488 55</span><br />
-                        <strong>Email:</strong> <span>info@example.com</span><br />
+                        <strong>Phone:</strong> <span>+1 (905) 555-1234</span><br />
+                        <strong>Email:</strong> <span>reservations@yummybistro.com</span><br />
                     </p>
                 </div>
             </div>
@@ -337,8 +353,7 @@
                 <div>
                     <h4>Opening Hours</h4>
                     <p>
-                        <strong>Mon-Sat:</strong> <span>11AM - 11PM</span><br />
-                        <strong>Sunday:</strong> <span>Closed</span>
+                        <strong>All Days:</strong> <span>Open 24/7</span>
                     </p>
                 </div>
             </div>
@@ -346,23 +361,18 @@
             <div class="col-lg-3 col-md-6">
                 <h4>Follow Us</h4>
                 <div class="social-links d-flex gap-3 fs-4">
-                    <a href="#" class="text-light"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
+                    <a href="https://twitter.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-twitter"></i></a>
+                    <a href="https://facebook.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-facebook"></i></a>
+                    <a href="https://instagram.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-instagram"></i></a>
+                    <a href="https://linkedin.com/company/yummybistro" class="text-light" target="_blank"><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="container text-center mt-4 pb-3 border-top border-secondary">
-        <p class="mb-0">© <strong class="px-1 sitename">Yummy</strong> All Rights Reserved</p>
-        <div class="credits">
-            Designed by
-            <a href="https://bootstrapmade.com/" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">BootstrapMade</a>
-            Distributed by
-            <a href="https://themewagon.com" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">ThemeWagon</a>
-        </div>
+        <p class="mb-0">© <strong class="px-1 sitename">Yummy Bistro</strong> All Rights Reserved</p>
+        <small class="text-muted">Designed with ❤️ by Group D and working all days, 24/7 — just Yummy.</small>
     </div>
 </footer>
 

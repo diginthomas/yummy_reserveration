@@ -1,14 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>My Bookings - Yummy Bootstrap Template</title>
-  <meta name="description" content="View your reservations at Yummy Restaurant" />
-  <meta name="keywords" content="bookings, reservations, my bookings, yummy, restaurant" />
+  <title>Contact - Yummy Bootstrap Template</title>
+  <meta name="description" content="Contact Yummy Restaurant for reservations or inquiries" />
+  <meta name="keywords" content="contact, reservations, restaurant, yummy, address, phone, email" />
 
   <!-- Favicons -->
   <link href="${pageContext.request.contextPath}/assets/img/favicon.png" rel="icon" />
@@ -39,7 +40,7 @@
     body {
       font-family: var(--body-font);
       color: var(--text-color);
-      background-color: #f8f9fa; /* Light background for the body */
+      background-color: #f8f9fa;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -106,7 +107,7 @@
       background-color: var(--primary-color);
       border-color: var(--primary-color);
       padding: 8px 25px;
-      border-radius: 50px; /* More rounded button */
+      border-radius: 50px;
       transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
@@ -115,68 +116,78 @@
       border-color: #e62f2f;
     }
 
-    /* My Bookings Section */
-    .my-bookings-section {
+    /* Contact Section */
+    .contact-section {
       padding: 80px 0;
-      background-color: #f8f9fa;
     }
 
-    .booking-card {
-      background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      padding: 30px;
+    .contact-details {
+      display: flex;
+      align-items: flex-start;
       margin-bottom: 30px;
-      transition: all 0.3s ease;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     }
 
-    .booking-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .booking-card h5 {
-      font-family: var(--heading-font);
-      font-size: 1.8rem;
+    .contact-details i {
+      font-size: 24px;
       color: var(--primary-color);
-      margin-bottom: 20px;
+      margin-right: 15px;
+      line-height: 1;
     }
 
-    .booking-card p {
-      margin-bottom: 10px;
-      font-size: 1rem;
+    .contact-details h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 5px;
       color: var(--secondary-color);
     }
 
-    .booking-card p strong {
-      color: var(--primary-color);
+    .contact-details p {
+      font-size: 14px;
+      margin: 0;
     }
 
-    .booking-card .btn {
-      margin-right: 10px;
-      border-radius: 50px;
-      padding: 8px 20px;
-      font-weight: 600;
+    #map-container {
+      border-radius: 8px;
+      overflow: hidden;
+      height: 350px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     }
 
-    .booking-card .btn-outline-primary {
-      color: var(--primary-color);
-      border-color: var(--primary-color);
+    .contact-form {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
     }
 
-    .booking-card .btn-outline-primary:hover {
+    .contact-form .form-control {
+      border-radius: 0;
+      box-shadow: none;
+      border-color: #dee2e6;
+      height: 44px;
+    }
+
+    .contact-form textarea.form-control {
+      height: auto;
+    }
+
+    .contact-form .btn-primary {
       background-color: var(--primary-color);
-      color: #fff;
+      border-color: var(--primary-color);
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: background-color 0.3s;
     }
 
-    .booking-card .btn-danger {
-      background-color: #dc3545;
-      border-color: #dc3545;
-    }
-
-    .booking-card .btn-danger:hover {
-      background-color: #c82333;
-      border-color: #bd2130;
+    .contact-form .btn-primary:hover {
+      background-color: #e62f2f;
+      border-color: #e62f2f;
     }
 
     /* Footer Styling */
@@ -228,21 +239,6 @@
       background-color: #e62f2f !important;
       border-color: #e62f2f !important;
     }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .booking-card {
-        padding: 20px;
-      }
-      .booking-card h5 {
-        font-size: 1.5rem;
-      }
-      .booking-card .btn {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-      }
-    }
   </style>
 </head>
 
@@ -262,10 +258,10 @@
 
     <nav id="navmenu" class="navmenu">
       <ul class="nav">
-        <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link active">Home</a></li>
+        <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link ">Home</a></li>
         <li class="nav-item"><a href="${pageContext.request.contextPath}#about" class="nav-link">About</a></li>
 
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a></li>
+        <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link active">Contact</a></li>
         <% if (user == null) { %>
         <!-- If user not logged in -->
         <li class="nav-item"><a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a></li>
@@ -288,43 +284,74 @@
 
 <main class="main">
 
-  <!-- My Bookings Section -->
-  <section id="my-bookings" class="my-bookings-section">
+  <!-- Contact Section -->
+  <section id="contact" class="contact-section">
     <div class="container section-title" data-aos="fade-up">
-      <h2>Your Reservations</h2>
-      <p><span>Manage Your</span> <span class="description-title">Bookings</span></p>
+      <h2>Contact</h2>
+      <p><span>Need Help?</span> <span class="description-title">Contact Us</span></p>
     </div>
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <c:forEach var="booking" items="${bookings}">
-            <div class="booking-card">
-              <h5>Booking ID: ${booking.id}</h5>
-              <p><strong>Name:</strong> ${booking.name}</p>
-              <p><strong>Email:</strong> ${booking.email}</p>
-              <p><strong>Phone:</strong> ${booking.phone}</p>
-              <p><strong>Date:</strong> ${booking.date}</p>
-              <p><strong>Time:</strong> ${booking.time}</p>
-              <p><strong>Number of People:</strong> ${booking.no_people}</p>
+      <div class="row">
+        <div class="col-lg-6">
+          <div id="map-container" class="mb-4">
+            <iframe style="border:0; width: 100%; height: 100%;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.3787754655613!2d-73.99222418464303!3d40.7554627793275!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c258525b6a12b9%3A0xc0010998379471d8!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sca!4v1628000000000!5m2!1sen!2sca" frameborder="0" allowfullscreen="" loading="lazy"></iframe>
+          </div>
 
-              <c:if test="${not empty booking.message}">
-                <p><strong>Special Request:</strong> ${booking.message}</p>
-              </c:if>
+          <div class="contact-details">
+            <i class="bi bi-geo-alt"></i>
+            <div>
+              <h3>Address</h3>
+              <p>A108 Adam Street, New York, NY 535022</p>
+            </div>
+          </div>
 
-              <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-outline-primary"
-                        onclick="alert('Confirmation sent for Booking ID: ${booking.id}')">
-                  Send Confirmation Again
-                </button>
-                <button type="button" class="btn btn-danger"
-                        onclick="confirm('Are you sure you want to cancel Booking ID: ${booking.id}?')">
-                  Cancel Booking
-                </button>
+          <div class="contact-details">
+            <i class="bi bi-envelope"></i>
+            <div>
+              <h3>Email Us</h3>
+              <p>info@example.com</p>
+            </div>
+          </div>
+
+          <div class="contact-details">
+            <i class="bi bi-telephone"></i>
+            <div>
+              <h3>Call Us</h3>
+              <p>+1 5589 55488 55</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <% if (request.getAttribute("msg") != null) { %>
+          <div class="alert alert-success">
+            <%= request.getAttribute("msg") %>
+          </div>
+          <% } else if (request.getAttribute("error") != null) { %>
+          <div class="alert alert-danger">
+            <%= request.getAttribute("error") %>
+          </div>
+          <% } %>
+          <form action="${pageContext.request.contextPath}/contact" method="post" role="form" class="contact-form">
+            <div class="row gy-4">
+              <div class="col-md-6">
+                <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+              </div>
+              <div class="col-md-6">
+                <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+              </div>
+              <div class="col-md-12">
+                <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+              </div>
+              <div class="col-md-12">
+                <textarea class="form-control" name="message" rows="6" placeholder="Message" required></textarea>
+              </div>
+              <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-primary">Send Message</button>
               </div>
             </div>
-          </c:forEach>
-
+          </form>
         </div>
       </div>
     </div>
@@ -349,7 +376,7 @@
           <h4>Contact</h4>
           <p>
             <strong>Phone:</strong> <span>+1 (905) 555-1234</span><br />
-            <strong>Email:</strong> <span>reservations@yummy.com</span><br />
+            <strong>Email:</strong> <span>reservations@yummybistro.com</span><br />
           </p>
         </div>
       </div>
@@ -378,10 +405,9 @@
 
   <div class="container text-center mt-4 pb-3 border-top border-secondary">
     <p class="mb-0">© <strong class="px-1 sitename">Yummy Bistro</strong> All Rights Reserved</p>
-    <small class="text-muted">Designed with ❤️ by Group D </small>
+    <small class="text-muted">Designed with ❤️ by Group D and working all days, 24/7 — just Yummy.</small>
   </div>
 </footer>
-
 
 <a href="#" id="scroll-top"
    class="scroll-top d-flex align-items-center justify-content-center position-fixed bottom-0 end-0 m-3 btn btn-primary rounded-circle"

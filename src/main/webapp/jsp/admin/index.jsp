@@ -1,14 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>My Bookings - Yummy Bootstrap Template</title>
-  <meta name="description" content="View your reservations at Yummy Restaurant" />
-  <meta name="keywords" content="bookings, reservations, my bookings, yummy, restaurant" />
+  <title>Admin Dashboard - Yummy Bootstrap Template</title>
+  <meta name="description" content="Admin dashboard for managing reservations at Yummy Restaurant" />
+  <meta name="keywords" content="admin, dashboard, bookings, reservations, manage, restaurant" />
 
   <!-- Favicons -->
   <link href="${pageContext.request.contextPath}/assets/img/favicon.png" rel="icon" />
@@ -39,7 +40,7 @@
     body {
       font-family: var(--body-font);
       color: var(--text-color);
-      background-color: #f8f9fa; /* Light background for the body */
+      background-color: #f8f9fa;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -75,7 +76,7 @@
       color: var(--secondary-color);
     }
 
-    /* Header Styling */
+    /* Header Styling (Simplified for Admin) */
     .header {
       transition: all 0.3s ease-in-out;
       padding: 20px 0;
@@ -102,79 +103,76 @@
       color: var(--primary-color) !important;
     }
 
-    .header .btn-primary {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-      padding: 8px 25px;
-      border-radius: 50px; /* More rounded button */
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-
-    .header .btn-primary:hover {
-      background-color: #e62f2f;
-      border-color: #e62f2f;
-    }
-
-    /* My Bookings Section */
-    .my-bookings-section {
+    /* Admin Dashboard Specific Styles */
+    .dashboard-section {
       padding: 80px 0;
       background-color: #f8f9fa;
     }
 
-    .booking-card {
-      background-color: #fff;
+    .table-responsive {
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-      padding: 30px;
-      margin-bottom: 30px;
-      transition: all 0.3s ease;
+      background-color: #fff;
+      overflow-x: auto; /* Enable horizontal scroll for smaller screens */
     }
 
-    .booking-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    .table-bookings {
+      min-width: 1000px; /* Ensure table doesn't shrink too much */
     }
 
-    .booking-card h5 {
-      font-family: var(--heading-font);
-      font-size: 1.8rem;
-      color: var(--primary-color);
-      margin-bottom: 20px;
-    }
-
-    .booking-card p {
-      margin-bottom: 10px;
-      font-size: 1rem;
-      color: var(--secondary-color);
-    }
-
-    .booking-card p strong {
-      color: var(--primary-color);
-    }
-
-    .booking-card .btn {
-      margin-right: 10px;
-      border-radius: 50px;
-      padding: 8px 20px;
+    .table-bookings th {
+      background-color: var(--secondary-color);
+      color: #fff;
+      font-family: var(--body-font);
       font-weight: 600;
+      white-space: nowrap;
     }
 
-    .booking-card .btn-outline-primary {
-      color: var(--primary-color);
-      border-color: var(--primary-color);
+    .table-bookings td {
+      vertical-align: middle;
+      white-space: nowrap;
     }
 
-    .booking-card .btn-outline-primary:hover {
-      background-color: var(--primary-color);
+    .table-bookings tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .table-bookings .btn {
+      border-radius: 50px;
+      padding: 5px 15px;
+      font-weight: 500;
+      margin-right: 5px;
+    }
+
+    .btn-confirm {
+      background-color: #28a745;
+      border-color: #28a745;
       color: #fff;
     }
 
-    .booking-card .btn-danger {
-      background-color: #dc3545;
-      border-color: #dc3545;
+    .btn-confirm:hover {
+      background-color: #218838;
+      border-color: #1e7e34;
     }
 
-    .booking-card .btn-danger:hover {
+    .btn-resend {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+    }
+
+    .btn-resend:hover {
+      background-color: #0069d9;
+      border-color: #0062cc;
+    }
+
+    .btn-cancel {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: #fff;
+    }
+
+    .btn-cancel:hover {
       background-color: #c82333;
       border-color: #bd2130;
     }
@@ -228,102 +226,81 @@
       background-color: #e62f2f !important;
       border-color: #e62f2f !important;
     }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .booking-card {
-        padding: 20px;
-      }
-      .booking-card h5 {
-        font-size: 1.5rem;
-      }
-      .booking-card .btn {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-      }
-    }
   </style>
 </head>
 
 <body class="index-page">
 
-<body class="index-page">
-<%@ page import="com.groupd.booking.model.User" %>
-<%
-  User user = (User) session.getAttribute("user");
-%>
-
 <header id="header" class="header d-flex align-items-center sticky-top bg-light shadow-sm">
   <div class="container position-relative d-flex align-items-center justify-content-between">
-    <a href="${pageContext.request.contextPath}" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
+    <a href="${pageContext.request.contextPath}/index.html" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
       <h1 class="sitename m-0 fs-3 fw-bold text-primary">Yummy<span class="text-danger">.</span></h1>
     </a>
-
-    <nav id="navmenu" class="navmenu">
-      <ul class="nav">
-        <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link active">Home</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}#about" class="nav-link">About</a></li>
-
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a></li>
-        <% if (user == null) { %>
-        <!-- If user not logged in -->
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/register" class="nav-link">Register</a></li>
-        <% } else { %>
-        <!-- If user is logged in -->
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/booking" class="nav-link">My Bookings</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/logout" class="nav-link">Logout</a></li>
-        <% } %>
-      </ul>
-    </nav>
-
-    <% if (user != null) { %>
-    <!-- Show only when logged in -->
-    <a class="btn btn-primary" href="${pageContext.request.contextPath}/book">Book a Table</a>
-    <% } %>
+    <h4 class="m-0 ms-auto me-3 text-secondary">Admin Dashboard</h4>
   </div>
 </header>
 
-
 <main class="main">
 
-  <!-- My Bookings Section -->
-  <section id="my-bookings" class="my-bookings-section">
+  <!-- Admin Dashboard Section -->
+  <section id="admin-dashboard" class="dashboard-section">
     <div class="container section-title" data-aos="fade-up">
-      <h2>Your Reservations</h2>
-      <p><span>Manage Your</span> <span class="description-title">Bookings</span></p>
+      <h2>Manage Bookings</h2>
+      <p><span>All Upcoming</span> <span class="description-title">Reservations</span></p>
     </div>
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
-      <div class="row justify-content-center">
-        <div class="col-lg-8">
-          <c:forEach var="booking" items="${bookings}">
-            <div class="booking-card">
-              <h5>Booking ID: ${booking.id}</h5>
-              <p><strong>Name:</strong> ${booking.name}</p>
-              <p><strong>Email:</strong> ${booking.email}</p>
-              <p><strong>Phone:</strong> ${booking.phone}</p>
-              <p><strong>Date:</strong> ${booking.date}</p>
-              <p><strong>Time:</strong> ${booking.time}</p>
-              <p><strong>Number of People:</strong> ${booking.no_people}</p>
-
-              <c:if test="${not empty booking.message}">
-                <p><strong>Special Request:</strong> ${booking.message}</p>
-              </c:if>
-
-              <div class="d-flex justify-content-end mt-4">
-                <button type="button" class="btn btn-outline-primary"
-                        onclick="alert('Confirmation sent for Booking ID: ${booking.id}')">
-                  Send Confirmation Again
-                </button>
-                <button type="button" class="btn btn-danger"
-                        onclick="confirm('Are you sure you want to cancel Booking ID: ${booking.id}?')">
-                  Cancel Booking
-                </button>
+      <div class="row">
+        <div class="col-12">
+          <c:choose>
+            <c:when test="${empty bookings}">
+              <div class="alert alert-info text-center" role="alert">
+                There are no upcoming bookings at this time.
               </div>
-            </div>
-          </c:forEach>
+            </c:when>
+            <c:otherwise>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle table-bookings">
+                  <thead>
+                  <tr>
+                    <th>ID</th>
+
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>People</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Message</th>
+                    <th>Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <!-- Loop through bookings (replace with actual data from your backend) -->
+                  <c:forEach var="booking" items="${bookings}">
+                    <tr>
+                      <td>${booking.id}</td>
+<%--                      <td>${booking.user_id}</td>--%>
+                      <td>${booking.name}</td>
+                      <td>${booking.email}</td>
+                      <td>${booking.phone}</td>
+                      <td>${booking.no_people}</td>
+                      <td>${booking.date}</td>
+                      <td>${booking.time}</td>
+                      <td>${booking.message}</td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-confirm" onclick="alert('Booking ID ${booking.id} confirmed.')">Confirm</button>
+                        <button type="button" class="btn btn-sm btn-resend" onclick="alert('Confirmation sent for Booking ID ${booking.id}.')">Resend</button>
+                        <button type="button" class="btn btn-sm btn-cancel" onclick="confirm('Are you sure you want to cancel Booking ID ${booking.id}?')">Cancel</button>
+                      </td>
+                    </tr>
+                  </c:forEach>
+                  </tbody>
+                </table>
+              </div>
+            </c:otherwise>
+          </c:choose>
+
 
         </div>
       </div>
@@ -331,6 +308,7 @@
   </section>
 
 </main>
+
 <footer id="footer" class="footer bg-dark text-light pt-5">
   <div class="container">
     <div class="row gy-3">
@@ -338,8 +316,8 @@
         <i class="bi bi-geo-alt icon fs-3 me-2"></i>
         <div class="address">
           <h4>Address</h4>
-          <p>456 Lakeshore Road E</p>
-          <p>Mississauga, ON L5G 1H4, Canada</p>
+          <p>A108 Adam Street</p>
+          <p>New York, NY 535022</p>
         </div>
       </div>
 
@@ -348,8 +326,8 @@
         <div>
           <h4>Contact</h4>
           <p>
-            <strong>Phone:</strong> <span>+1 (905) 555-1234</span><br />
-            <strong>Email:</strong> <span>reservations@yummy.com</span><br />
+            <strong>Phone:</strong> <span>+1 5589 55488 55</span><br />
+            <strong>Email:</strong> <span>info@example.com</span><br />
           </p>
         </div>
       </div>
@@ -359,7 +337,8 @@
         <div>
           <h4>Opening Hours</h4>
           <p>
-            <strong>All Days:</strong> <span>Open 24/7</span>
+            <strong>Mon-Sat:</strong> <span>11AM - 11PM</span><br />
+            <strong>Sunday:</strong> <span>Closed</span>
           </p>
         </div>
       </div>
@@ -367,21 +346,25 @@
       <div class="col-lg-3 col-md-6">
         <h4>Follow Us</h4>
         <div class="social-links d-flex gap-3 fs-4">
-          <a href="https://twitter.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-twitter"></i></a>
-          <a href="https://facebook.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-facebook"></i></a>
-          <a href="https://instagram.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-instagram"></i></a>
-          <a href="https://linkedin.com/company/yummybistro" class="text-light" target="_blank"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
         </div>
       </div>
     </div>
   </div>
 
   <div class="container text-center mt-4 pb-3 border-top border-secondary">
-    <p class="mb-0">© <strong class="px-1 sitename">Yummy Bistro</strong> All Rights Reserved</p>
-    <small class="text-muted">Designed with ❤️ by Group D </small>
+    <p class="mb-0">© <strong class="px-1 sitename">Yummy</strong> All Rights Reserved</p>
+    <div class="credits">
+      Designed by
+      <a href="https://bootstrapmade.com/" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">BootstrapMade</a>
+      Distributed by
+      <a href="https://themewagon.com" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">ThemeWagon</a>
+    </div>
   </div>
 </footer>
-
 
 <a href="#" id="scroll-top"
    class="scroll-top d-flex align-items-center justify-content-center position-fixed bottom-0 end-0 m-3 btn btn-primary rounded-circle"

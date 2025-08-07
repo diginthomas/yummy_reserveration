@@ -1,4 +1,4 @@
-package com.groupd.booking.controller;
+package com.groupd.booking.controller.auth;
 
 import com.groupd.booking.dao.UserDao;
 import com.groupd.booking.model.User;
@@ -23,6 +23,13 @@ public class LoginController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(false);
+        User user = (User) session.getAttribute("user");
+
+        if (user != null) {
+            resp.sendRedirect(req.getContextPath() + "/");
+            return;
+        }
         req.getRequestDispatcher("/jsp/login.jsp").forward(req, resp);
     }
 
@@ -35,10 +42,13 @@ public class LoginController extends HttpServlet {
         if (user != null) {
             // Save user info in session
             HttpSession session = req.getSession();
-//            session.setAttribute("loggedInUser", user);
-
-            // Redirect to home page or dashboard
-            resp.sendRedirect(req.getContextPath() + "/");
+            session.setAttribute("user", user);
+            if(user.getId()==1){
+                resp.sendRedirect(req.getContextPath() + "/admin");
+            }else {
+                // Redirect to home page or dashboard
+                resp.sendRedirect(req.getContextPath() + "/");
+            }
         } else {
             // Invalid login, set error and redirect back to login page
             req.getSession().setAttribute("loginError", "Invalid email or password");

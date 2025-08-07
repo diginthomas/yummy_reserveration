@@ -1,4 +1,4 @@
-package com.groupd.booking.controller;
+package com.groupd.booking.controller.home;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,10 +8,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/book")
-public class BookingController extends HttpServlet {
+
+@WebServlet("/")
+public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/jsp/book.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/index.jsp").forward(req,resp);
     }
 }
+

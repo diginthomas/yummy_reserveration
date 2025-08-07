@@ -1,5 +1,14 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+
+<%
+    String reservationSuccess = (String) session.getAttribute("reservationSuccess");
+    String reservationError = (String) session.getAttribute("reservationError");
+    if (reservationSuccess != null) session.removeAttribute("reservationSuccess");
+    if (reservationError != null) session.removeAttribute("reservationError");
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -245,28 +254,87 @@
   </style>
 </head>
 
+<script>
+    window.onload = function () {
+        // Set min date to tomorrow
+        const dateInput = document.getElementById("date");
+        const today = new Date();
+        today.setDate(today.getDate() + 1); // Tomorrow
+        const minDate = today.toISOString().split("T")[0];
+        dateInput.min = minDate;
+    };
+
+    document.querySelector("form").addEventListener("submit", function (e) {
+        const timeValue = document.getElementById("time").value;
+        const dateValue = document.getElementById("date").value;
+
+        // Validate time
+        if (timeValue) {
+            const [hour, minute] = timeValue.split(":").map(Number);
+
+            // Time must be between 10:00 and 23:00
+            if (hour < 10 || hour > 23 || (hour === 23 && minute > 0)) {
+                e.preventDefault();
+                alert("Please select a time between 10:00 AM and 11:00 PM.");
+                return;
+            }
+
+            // Only allow 00 or 30 minutes
+            if (minute !== 0 && minute !== 30) {
+                e.preventDefault();
+                alert("Please select a time in 30-minute intervals (e.g., 10:00, 10:30).");
+                return;
+            }
+        }
+
+        // Optional: Validate if date is missing
+        if (!dateValue) {
+            e.preventDefault();
+            alert("Please select a reservation date.");
+        }
+    });
+</script>
+
+
+
+
 <body class="index-page">
+<%@ page import="com.groupd.booking.model.User" %>
+<%
+    User user = (User) session.getAttribute("user");
+%>
 
 <header id="header" class="header d-flex align-items-center sticky-top bg-light shadow-sm">
-  <div class="container position-relative d-flex align-items-center justify-content-between">
-    <a href="${pageContext.request.contextPath}/index.html" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
-      <h1 class="sitename m-0 fs-3 fw-bold text-primary">Yummy<span class="text-danger">.</span></h1>
-    </a>
-    <nav id="navmenu" class="navmenu">
-      <ul class="nav">
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#hero" class="nav-link">Home</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#about" class="nav-link">About</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/menu.jsp" class="nav-link">Menu</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/book-a-table.jsp" class="nav-link active">Book a Table</a></li> <!-- Active Nav Link -->
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#contact" class="nav-link">Contact</a></li>
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="${pageContext.request.contextPath}" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
+            <h1 class="sitename m-0 fs-3 fw-bold text-primary">Yummy<span class="text-danger">.</span></h1>
+        </a>
 
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/register" class="nav-link">Register</a></li>
-      </ul>
-    </nav>
-    <a class="btn btn-primary" href="${pageContext.request.contextPath}/book-a-table.jsp">Book a Table</a>
-  </div>
+        <nav id="navmenu" class="navmenu">
+            <ul class="nav">
+                <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link active">Home</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}#about" class="nav-link">About</a></li>
+
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a></li>
+                <% if (user == null) { %>
+                <!-- If user not logged in -->
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/register" class="nav-link">Register</a></li>
+                <% } else { %>
+                <!-- If user is logged in -->
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/booking" class="nav-link">My Bookings</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/logout" class="nav-link">Logout</a></li>
+                <% } %>
+            </ul>
+        </nav>
+
+        <% if (user != null) { %>
+        <!-- Show only when logged in -->
+        <a class="btn btn-primary" href="${pageContext.request.contextPath}/book">Book a Table</a>
+        <% } %>
+    </div>
 </header>
+
 
 <main class="main">
 
@@ -279,58 +347,64 @@
             <h2>Book Your Table</h2>
             <p class="text-center mb-4 text-secondary">Fill out the form below to reserve your spot at Yummy Restaurant.</p>
 
-            <%
-              String reservationError = (String) session.getAttribute("reservationError");
-              if (reservationError != null) {
-            %>
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-              <%= reservationError %>
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            <%
-                session.removeAttribute("reservationError"); // clear it after showing
-              }
-            %>
 
-            <form action="${pageContext.request.contextPath}/book-a-table" method="post">
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="name" class="form-label">Your Name</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="email" class="form-label">Your Email</label>
-                  <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
-                </div>
+              <%-- Success / Error Messages --%>
+              <% if (reservationSuccess != null) { %>
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                  <%= reservationSuccess %>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="phone" class="form-label">Your Phone</label>
-                  <input type="tel" class="form-control" id="phone" name="phone" placeholder="Your Phone" required>
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="date" class="form-label">Reservation Date</label>
-                  <input type="date" class="form-control" id="date" name="date" required>
-                </div>
+              <% } %>
+              <% if (reservationError != null) { %>
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                  <%= reservationError %>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label for="time" class="form-label">Reservation Time</label>
-                  <input type="time" class="form-control" id="time" name="time" required step="1800">
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label for="numPeople" class="form-label">Number of People</label>
-                  <input type="number" class="form-control" id="numPeople" name="numPeople" min="1" max="20" value="1" required>
-                </div>
-              </div>
-              <div class="mb-4">
-                <label for="message" class="form-label">Special Request (Optional)</label>
-                <textarea class="form-control" id="message" name="message" rows="4" placeholder="Any special requests, allergies, or seating preferences?"></textarea>
-              </div>
-              <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Book Now</button>
-              </div>
-            </form>
+              <% } %>
+
+              <form action="${pageContext.request.contextPath}/book" method="post">
+                  <div class="row">
+                      <div class="col-md-6 mb-3">
+                          <label for="name" class="form-label">Your Name</label>
+                          <input type="text" class="form-control" id="name" name="name"
+                                 value="<%= user != null ? user.getName() : "" %>" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                          <label for="email" class="form-label">Your Email</label>
+                          <input type="email" class="form-control" id="email" name="email"
+                                 value="<%= user != null ? user.getEmail() : "" %>" required>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-6 mb-3">
+                          <label for="phone" class="form-label">Your Phone</label>
+                          <input type="tel" class="form-control" id="phone" name="phone" placeholder="Your Phone" required>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                          <label for="date" class="form-label">Reservation Date</label>
+                          <input type="date" class="form-control" id="date" name="date" required>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-6 mb-3">
+                          <label for="time" class="form-label">Reservation Time</label>
+                          <input type="time" class="form-control" id="time" name="time" required step="1800">
+                      </div>
+                      <div class="col-md-6 mb-3">
+                          <label for="numPeople" class="form-label">Number of People</label>
+                          <input type="number" class="form-control" id="numPeople" name="numPeople" min="1" max="20" value="1" required>
+                      </div>
+                  </div>
+                  <div class="mb-4">
+                      <label for="message" class="form-label">Special Request (Optional)</label>
+                      <textarea class="form-control" id="message" name="message" rows="4"
+                                placeholder="Any special requests, allergies, or seating preferences?"></textarea>
+                  </div>
+                  <div class="d-grid gap-2">
+                      <button type="submit" class="btn btn-primary">Book Now</button>
+                  </div>
+              </form>
+
           </div>
         </div>
       </div>
@@ -338,62 +412,55 @@
   </section>
 
 </main>
-
 <footer id="footer" class="footer bg-dark text-light pt-5">
-  <div class="container">
-    <div class="row gy-3">
-      <div class="col-lg-3 col-md-6 d-flex">
-        <i class="bi bi-geo-alt icon fs-3 me-2"></i>
-        <div class="address">
-          <h4>Address</h4>
-          <p>A108 Adam Street</p>
-          <p>New York, NY 535022</p>
-        </div>
-      </div>
+    <div class="container">
+        <div class="row gy-3">
+            <div class="col-lg-3 col-md-6 d-flex">
+                <i class="bi bi-geo-alt icon fs-3 me-2"></i>
+                <div class="address">
+                    <h4>Address</h4>
+                    <p>456 Lakeshore Road E</p>
+                    <p>Mississauga, ON L5G 1H4, Canada</p>
+                </div>
+            </div>
 
-      <div class="col-lg-3 col-md-6 d-flex">
-        <i class="bi bi-telephone icon fs-3 me-2"></i>
-        <div>
-          <h4>Contact</h4>
-          <p>
-            <strong>Phone:</strong> <span>+1 5589 55488 55</span><br />
-            <strong>Email:</strong> <span>info@example.com</span><br />
-          </p>
-        </div>
-      </div>
+            <div class="col-lg-3 col-md-6 d-flex">
+                <i class="bi bi-telephone icon fs-3 me-2"></i>
+                <div>
+                    <h4>Contact</h4>
+                    <p>
+                        <strong>Phone:</strong> <span>+1 (905) 555-1234</span><br />
+                        <strong>Email:</strong> <span>reservations@yummy.com</span><br />
+                    </p>
+                </div>
+            </div>
 
-      <div class="col-lg-3 col-md-6 d-flex">
-        <i class="bi bi-clock icon fs-3 me-2"></i>
-        <div>
-          <h4>Opening Hours</h4>
-          <p>
-            <strong>Mon-Sat:</strong> <span>11AM - 11PM</span><br />
-            <strong>Sunday:</strong> <span>Closed</span>
-          </p>
-        </div>
-      </div>
+            <div class="col-lg-3 col-md-6 d-flex">
+                <i class="bi bi-clock icon fs-3 me-2"></i>
+                <div>
+                    <h4>Opening Hours</h4>
+                    <p>
+                        <strong>All Days:</strong> <span>Open 24/7</span>
+                    </p>
+                </div>
+            </div>
 
-      <div class="col-lg-3 col-md-6">
-        <h4>Follow Us</h4>
-        <div class="social-links d-flex gap-3 fs-4">
-          <a href="#" class="text-light"><i class="bi bi-twitter"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
+            <div class="col-lg-3 col-md-6">
+                <h4>Follow Us</h4>
+                <div class="social-links d-flex gap-3 fs-4">
+                    <a href="https://twitter.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-twitter"></i></a>
+                    <a href="https://facebook.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-facebook"></i></a>
+                    <a href="https://instagram.com/yummybistro" class="text-light" target="_blank"><i class="bi bi-instagram"></i></a>
+                    <a href="https://linkedin.com/company/yummybistro" class="text-light" target="_blank"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 
-  <div class="container text-center mt-4 pb-3 border-top border-secondary">
-    <p class="mb-0">© <strong class="px-1 sitename">Yummy</strong> All Rights Reserved</p>
-    <div class="credits">
-      Designed by
-      <a href="https://bootstrapmade.com/" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">BootstrapMade</a>
-      Distributed by
-      <a href="https://themewagon.com" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">ThemeWagon</a>
+    <div class="container text-center mt-4 pb-3 border-top border-secondary">
+        <p class="mb-0">© <strong class="px-1 sitename">Yummy </strong> All Rights Reserved</p>
+        <small class="text-muted">Designed with ❤️ by Group D y.</small>
     </div>
-  </div>
 </footer>
 
 <a href="#" id="scroll-top"
@@ -405,5 +472,6 @@
 <!-- Bootstrap Bundle JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 
 </html>

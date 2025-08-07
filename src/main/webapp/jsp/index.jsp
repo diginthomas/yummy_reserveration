@@ -372,25 +372,42 @@
 </head>
 
 <body class="index-page">
+<%@ page import="com.groupd.booking.model.User" %>
+<%
+    User user = (User) session.getAttribute("user");
+%>
 
 <header id="header" class="header d-flex align-items-center sticky-top bg-light shadow-sm">
     <div class="container position-relative d-flex align-items-center justify-content-between">
-        <a href="${pageContext.request.contextPath}/index.html" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
+        <a href="${pageContext.request.contextPath}" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
             <h1 class="sitename m-0 fs-3 fw-bold text-primary">Yummy<span class="text-danger">.</span></h1>
         </a>
+
         <nav id="navmenu" class="navmenu">
             <ul class="nav">
-                <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#hero" class="nav-link active">Home</a></li>
-                <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#about" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#contact" class="nav-link">Contact</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link active">Home</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}#about" class="nav-link">About</a></li>
 
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a></li>
+                <% if (user == null) { %>
+                <!-- If user not logged in -->
                 <li class="nav-item"><a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a></li>
                 <li class="nav-item"><a href="${pageContext.request.contextPath}/register" class="nav-link">Register</a></li>
+                <% } else { %>
+                <!-- If user is logged in -->
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/booking" class="nav-link">My Bookings</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/logout" class="nav-link">Logout</a></li>
+                <% } %>
             </ul>
         </nav>
+
+        <% if (user != null) { %>
+        <!-- Show only when logged in -->
         <a class="btn btn-primary" href="${pageContext.request.contextPath}/book">Book a Table</a>
+        <% } %>
     </div>
 </header>
+
 
 <main class="main">
 
@@ -400,7 +417,7 @@
             <div class="row gy-4 justify-content-center justify-content-lg-between align-items-center">
                 <div class="col-lg-5 order-2 order-lg-1 d-flex flex-column justify-content-center">
                     <h1 data-aos="fade-up">Enjoy Your Healthy<br />Delicious Food</h1>
-                    <p data-aos="fade-up" data-aos-delay="100">We are a team of talented designers making websites with Bootstrap</p>
+                    <p data-aos="fade-up" data-aos-delay="100">Welcome to Yummy! We’re a passionate team of chefs and designers committed to crafting exceptional meals and unforgettable dining experiences. Every plate we serve is designed with flavor, nutrition, and care in mind.</p>
                     <div class="d-flex gap-3" data-aos="fade-up" data-aos-delay="200">
                         <a href="${pageContext.request.contextPath}/book" class="btn btn-primary">Book a Table</a>
                         <a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn btn-outline-secondary d-flex align-items-center gap-2">
@@ -433,16 +450,15 @@
                 <div class="col-lg-5" data-aos="fade-up" data-aos-delay="250">
                     <div class="content ps-0 ps-lg-5">
                         <p class="fst-italic">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                            At Yummy, we blend culinary artistry with heartfelt service to bring you an unforgettable dining experience. Our kitchen is powered by talented chefs who believe in cooking with passion and purpose. From sourcing fresh ingredients to creating handcrafted dishes, everything we do is rooted in quality and creativity.
                         </p>
                         <ul>
-                            <li><i class="bi bi-check-circle-fill"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Duis aute irure dolor in reprehenderit in voluptate velit.</li>
-                            <li><i class="bi bi-check-circle-fill"></i> Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate trideta storacalaperda mastiro dolore eu fugiat nulla pariatur.</li>
+                            <li><i class="bi bi-check-circle-fill"></i>We use only fresh, high-quality ingredients.</li>
+                            <li><i class="bi bi-check-circle-fill"></i>  Each dish is crafted to deliver a perfect balance of flavor and nutrition..</li>
+                            <li><i class="bi bi-check-circle-fill"></i>Our chefs continuously innovate with new and exciting menu options..</li>
                         </ul>
                         <p>
-                            Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                            velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+                            Whether you're stopping by for a quick lunch or celebrating a special occasion, our warm ambiance and friendly staff are here to make you feel at home. Come taste the difference that dedication makes.
                         </p>
                         <div class="position-relative mt-4">
                             <img src="https://images.unsplash.com/photo-1600565193348-f74bd3c7ccdf?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid rounded-3 shadow-sm" alt="About Video" />
@@ -462,8 +478,7 @@
                     <div class="why-box">
                         <h3>Why Choose Yummy</h3>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit.
-                            Asperiores dolores sed et. Tenetur quia eos. Autem tempore quibusdam vel necessitatibus optio ad corporis.
+                            At Yummy, quality meets passion. Our chefs prepare each dish with care, using only the freshest ingredients. We believe in serving food that satisfies the soul.
                         </p>
                         <div class="text-center">
                             <a href="#" class="btn-link">Learn More <i class="bi bi-chevron-right"></i></a>
@@ -475,22 +490,22 @@
                         <div class="col-xl-4">
                             <div class="icon-box d-flex flex-column justify-content-center align-items-center">
                                 <i class="bi bi-clipboard-data"></i>
-                                <h4 class="mt-3">Corporis voluptates officia eiusmod</h4>
-                                <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut aliquip</p>
+                                <h4 class="mt-3">Tailored Dining Experiences</h4>
+                                <p>We understand our guests have unique tastes. Our team works hard to offer dishes that cater to different preferences, whether you're vegetarian, vegan, or meat-loving.</p>
                             </div>
                         </div>
                         <div class="col-xl-4" data-aos="fade-up" data-aos-delay="300">
                             <div class="icon-box d-flex flex-column justify-content-center align-items-center">
                                 <i class="bi bi-gem"></i>
-                                <h4 class="mt-3">Ullamco laboris ladore lore pan</h4>
-                                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt</p>
+                                <h4 class="mt-3">Fresh Ingredients. Every Time.</h4>
+                                <p>We partner with local farms and trusted suppliers to ensure that every bite you take is fresh, clean, and full of flavor.</p>
                             </div>
                         </div>
                         <div class="col-xl-4" data-aos="fade-up" data-aos-delay="400">
                             <div class="icon-box d-flex flex-column justify-content-center align-items-center">
                                 <i class="bi bi-inboxes"></i>
-                                <h4 class="mt-3">Labore consequatur incidid dolore</h4>
-                                <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere</p>
+                                <h4 class="mt-3">Modern Dining, Timeless Taste</h4>
+                                <p>Our restaurant combines a stylish interior with timeless dishes that keep you coming back for more.</p>
                             </div>
                         </div>
                     </div>
@@ -502,17 +517,15 @@
     <!-- Placeholder for other sections like Menu, Testimonials, Events, Chefs, Gallery, Contact -->
     <!-- You can add more sections here following the same styling principles -->
 
-</main>
-
-<footer id="footer" class="footer bg-dark text-light pt-5">
+</main><footer id="footer" class="footer bg-dark text-light pt-5">
     <div class="container">
         <div class="row gy-3">
             <div class="col-lg-3 col-md-6 d-flex">
                 <i class="bi bi-geo-alt icon fs-3 me-2"></i>
                 <div class="address">
                     <h4>Address</h4>
-                    <p>A108 Adam Street</p>
-                    <p>New York, NY 535022</p>
+                    <p>456 Lakeshore Road E</p>
+                    <p>Mississauga, ON L5G 1H4, Canada</p>
                 </div>
             </div>
 
@@ -521,8 +534,8 @@
                 <div>
                     <h4>Contact</h4>
                     <p>
-                        <strong>Phone:</strong> <span>+1 5589 55488 55</span><br />
-                        <strong>Email:</strong> <span>info@example.com</span><br />
+                        <strong>Phone:</strong> <span>+1 (905) 555-1234</span><br />
+                        <strong>Email:</strong> <span>reservations@yummy.com</span><br />
                     </p>
                 </div>
             </div>
@@ -532,8 +545,7 @@
                 <div>
                     <h4>Opening Hours</h4>
                     <p>
-                        <strong>Mon-Sat:</strong> <span>11AM - 11PM</span><br />
-                        <strong>Sunday:</strong> <span>Closed</span>
+                        <strong>All Days:</strong> <span>Open 24/7</span>
                     </p>
                 </div>
             </div>
@@ -541,10 +553,10 @@
             <div class="col-lg-3 col-md-6">
                 <h4>Follow Us</h4>
                 <div class="social-links d-flex gap-3 fs-4">
-                    <a href="#" class="text-light"><i class="bi bi-twitter"></i></a>
-                    <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="text-light" target="_blank"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-light" target="_blank"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-light" target="_blank"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="text-light" target="_blank"><i class="bi bi-linkedin"></i></a>
                 </div>
             </div>
         </div>
@@ -552,14 +564,10 @@
 
     <div class="container text-center mt-4 pb-3 border-top border-secondary">
         <p class="mb-0">© <strong class="px-1 sitename">Yummy</strong> All Rights Reserved</p>
-        <div class="credits">
-            Designed by
-            <a href="https://bootstrapmade.com/" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">BootstrapMade</a>
-            Distributed by
-            <a href="https://themewagon.com" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">ThemeWagon</a>
-        </div>
+        <small class="text-muted">Designed with ❤️ by Group D .</small>
     </div>
 </footer>
+
 
 <a href="#" id="scroll-top"
    class="scroll-top d-flex align-items-center justify-content-center position-fixed bottom-0 end-0 m-3 btn btn-primary rounded-circle"
