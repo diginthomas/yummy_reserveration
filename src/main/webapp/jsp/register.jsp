@@ -250,7 +250,7 @@
             <ul class="nav">
                 <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link ">Home</a></li>
                 <li class="nav-item"><a href="${pageContext.request.contextPath}#about" class="nav-link">About</a></li>
-
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/menu" class="nav-link">Menu</a></li>
                 <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a></li>
                 <% if (user == null) { %>
                 <!-- If user not logged in -->

@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -273,24 +275,35 @@
 </head>
 
 <body class="index-page">
-
+<%@ page import="com.groupd.booking.model.User" %>
+<%
+  User user = (User) session.getAttribute("user");
+%>
 <header id="header" class="header d-flex align-items-center sticky-top bg-light shadow-sm">
   <div class="container position-relative d-flex align-items-center justify-content-between">
     <a href="${pageContext.request.contextPath}/index.html" class="logo d-flex align-items-center me-auto me-xl-0 text-decoration-none">
       <h1 class="sitename m-0 fs-3 fw-bold text-primary">Yummy<span class="text-danger">.</span></h1>
     </a>
-    <nav id="navmenu" class="navmenu">
-      <ul class="nav">
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#hero" class="nav-link">Home</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#about" class="nav-link">About</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/menu.jsp" class="nav-link active">Menu</a></li> <!-- New Active Nav Link -->
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/index.html#contact" class="nav-link">Contact</a></li>
-
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a></li>
-        <li class="nav-item"><a href="${pageContext.request.contextPath}/register" class="nav-link">Register</a></li>
-      </ul>
+    <ul class="nav">
+      <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link active">Home</a></li>
+      <li class="nav-item"><a href="${pageContext.request.contextPath}#about" class="nav-link">About</a></li>
+      <li class="nav-item"><a href="${pageContext.request.contextPath}/menu" class="nav-link">Menu</a></li>
+      <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a></li>
+      <% if (user == null) { %>
+      <!-- If user not logged in -->
+      <li class="nav-item"><a href="${pageContext.request.contextPath}/login" class="nav-link">Login</a></li>
+      <li class="nav-item"><a href="${pageContext.request.contextPath}/register" class="nav-link">Register</a></li>
+      <% } else { %>
+      <!-- If user is logged in -->
+      <li class="nav-item"><a href="${pageContext.request.contextPath}/booking" class="nav-link">My Bookings</a></li>
+      <li class="nav-item"><a href="${pageContext.request.contextPath}/logout" class="nav-link">Logout</a></li>
+      <% } %>
+    </ul>
     </nav>
-    <a class="btn btn-primary" href="${pageContext.request.contextPath}/index.html#book-a-table">Book a Table</a>
+    <% if (user != null) { %>
+    <!-- Show only when logged in -->
+    <a class="btn btn-primary" href="${pageContext.request.contextPath}/book">Book a Table</a>
+    <% } %>
   </div>
 </header>
 
@@ -303,94 +316,37 @@
       <p><span>Check Our</span> <span class="description-title">Yummy Menu</span></p>
     </div>
 
-    <div class="container" data-aos="fade-up" data-aos-delay="100">
-      <div class="menu-filters">
-        <ul>
-          <li><a class="active" data-filter="*" href="#menu">All</a></li>
-          <li><a data-filter=".starters" href="#menu">Starters</a></li>
-          <li><a data-filter=".main-courses" href="#menu">Main Courses</a></li>
-          <li><a data-filter=".desserts" href="#menu">Desserts</a></li>
-          <li><a data-filter=".drinks" href="#menu">Drinks</a></li>
-        </ul>
-      </div>
 
-      <div class="row gy-5 menu-container">
+<div>
+    <div class="row gy-4">
 
-        <!-- Starters -->
-        <div class="col-lg-6 menu-item filter-starters">
-          <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" alt="Bruschetta" onerror="this.onerror=null;this.src='https://placehold.co/400x200/FF5733/FFFFFF?text=Bruschetta';" />
-          <h4>Bruschetta</h4>
-          <p>Toasted bread, tomatoes, basil, garlic, and olive oil.</p>
-          <div class="price">$8.50</div>
-        </div>
-
-        <div class="col-lg-6 menu-item filter-starters">
-          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a027b4?q=80&w=1080&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" alt="Caprese Salad" onerror="this.onerror=null;this.src='https://placehold.co/400x200/33A0FF/FFFFFF?text=Caprese+Salad';" />
-          <h4>Caprese Salad</h4>
-          <p>Fresh mozzarella, ripe tomatoes, basil, and balsamic glaze.</p>
-          <div class="price">$10.00</div>
-        </div>
-
-        <!-- Main Courses -->
+      <c:forEach var="menu" items="${menuList}">
         <div class="col-lg-6 menu-item filter-main-courses">
-          <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1180&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" alt="Grilled Salmon" onerror="this.onerror=null;this.src='https://placehold.co/400x200/FFC300/FFFFFF?text=Grilled+Salmon';" />
-          <h4>Grilled Salmon</h4>
-          <p>Pan-seared salmon fillet with roasted vegetables and lemon butter sauce.</p>
-          <div class="price">$24.99</div>
+          <img
+                  src="${menu.image}"
+                  class="img-fluid"
+                  alt="${menu.name}"
+                  onerror="this.onerror=null;this.src='https://placehold.co/400x200/FF5733/FFFFFF?text=${menu.name}';"
+          />
+          <h4>${menu.name}</h4>
+          <p>${menu.description}</p>
+          <div class="price">$${menu.price}</div>
         </div>
+      </c:forEach>
 
-        <div class="col-lg-6 menu-item filter-main-courses">
-          <img src="https://images.unsplash.com/photo-1598511653193-410a08e68407?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" alt="Chicken Parmesan" onerror="this.onerror=null;this.src='https://placehold.co/400x200/FF5733/FFFFFF?text=Chicken+Parmesan';" />
-          <h4>Chicken Parmesan</h4>
-          <p>Breaded chicken breast, marinara sauce, melted mozzarella, served with pasta.</p>
-          <div class="price">$18.75</div>
-        </div>
-
-        <!-- Desserts -->
-        <div class="col-lg-6 menu-item filter-desserts">
-          <img src="https://images.unsplash.com/photo-1587314168485-3236d6710814?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" alt="Chocolate Lava Cake" onerror="this.onerror=null;this.src='https://placehold.co/400x200/33A0FF/FFFFFF?text=Lava+Cake';" />
-          <h4>Chocolate Lava Cake</h4>
-          <p>Warm chocolate cake with a molten center, served with vanilla ice cream.</p>
-          <div class="price">$9.00</div>
-        </div>
-
-        <div class="col-lg-6 menu-item filter-desserts">
-          <img src="https://images.unsplash.com/photo-1563729781605-e47e3a9c7b9f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" alt="Cheesecake" onerror="this.onerror=null;this.src='https://placehold.co/400x200/FFC300/FFFFFF?text=Cheesecake';" />
-          <h4>New York Cheesecake</h4>
-          <p>Creamy cheesecake with a graham cracker crust, topped with berry compote.</p>
-          <div class="price">$8.50</div>
-        </div>
-
-        <!-- Drinks -->
-        <div class="col-lg-6 menu-item filter-drinks">
-          <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" alt="Fresh Orange Juice" onerror="this.onerror=null;this.src='https://placehold.co/400x200/FF5733/FFFFFF?text=Orange+Juice';" />
-          <h4>Fresh Orange Juice</h4>
-          <p>Freshly squeezed orange juice.</p>
-          <div class="price">$4.00</div>
-        </div>
-
-        <div class="col-lg-6 menu-item filter-drinks">
-          <img src="https://images.unsplash.com/photo-1525381335031-8938740d7969?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="img-fluid" alt="Espresso" onerror="this.onerror=null;this.src='https://placehold.co/400x200/33A0FF/FFFFFF?text=Espresso';" />
-          <h4>Espresso</h4>
-          <p>Rich, strong shot of coffee.</p>
-          <div class="price">$3.50</div>
-        </div>
-
-      </div>
+    </div>
     </div>
   </section><!-- /Menu Section -->
 
-</main>
-
-<footer id="footer" class="footer bg-dark text-light pt-5">
+</main><footer id="footer" class="footer bg-dark text-light pt-5">
   <div class="container">
     <div class="row gy-3">
       <div class="col-lg-3 col-md-6 d-flex">
         <i class="bi bi-geo-alt icon fs-3 me-2"></i>
         <div class="address">
           <h4>Address</h4>
-          <p>A108 Adam Street</p>
-          <p>New York, NY 535022</p>
+          <p>456 Lakeshore Road E</p>
+          <p>Mississauga, ON L5G 1H4, Canada</p>
         </div>
       </div>
 
@@ -399,8 +355,8 @@
         <div>
           <h4>Contact</h4>
           <p>
-            <strong>Phone:</strong> <span>+1 5589 55488 55</span><br />
-            <strong>Email:</strong> <span>info@example.com</span><br />
+            <strong>Phone:</strong> <span>+1 (905) 555-1234</span><br />
+            <strong>Email:</strong> <span>reservations@yummy.com</span><br />
           </p>
         </div>
       </div>
@@ -410,8 +366,7 @@
         <div>
           <h4>Opening Hours</h4>
           <p>
-            <strong>Mon-Sat:</strong> <span>11AM - 11PM</span><br />
-            <strong>Sunday:</strong> <span>Closed</span>
+            <strong>All Days:</strong> <span>Open 24/7</span>
           </p>
         </div>
       </div>
@@ -419,10 +374,10 @@
       <div class="col-lg-3 col-md-6">
         <h4>Follow Us</h4>
         <div class="social-links d-flex gap-3 fs-4">
-          <a href="#" class="text-light"><i class="bi bi-twitter"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
+          <a href="#" class="text-light" target="_blank"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-light" target="_blank"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-light" target="_blank"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="text-light" target="_blank"><i class="bi bi-linkedin"></i></a>
         </div>
       </div>
     </div>
@@ -430,12 +385,7 @@
 
   <div class="container text-center mt-4 pb-3 border-top border-secondary">
     <p class="mb-0">© <strong class="px-1 sitename">Yummy</strong> All Rights Reserved</p>
-    <div class="credits">
-      Designed by
-      <a href="https://bootstrapmade.com/" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">BootstrapMade</a>
-      Distributed by
-      <a href="https://themewagon.com" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">ThemeWagon</a>
-    </div>
+    <small class="text-muted">Designed with ❤️ by Group D .</small>
   </div>
 </footer>
 

@@ -37,7 +37,7 @@ public class BookingDao {
 
     public List<Booking> getBookingsByUserId(int userId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM booking WHERE user_id = ? ORDER BY date DESC, time DESC";
+        String sql = "SELECT * FROM booking WHERE user_id = ? ORDER BY is_completed ASC, date DESC, time DESC";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -56,6 +56,7 @@ public class BookingDao {
                 booking.setTime(rs.getString("time"));
                 booking.setNo_people(rs.getInt("no_people"));
                 booking.setMessage(rs.getString("message"));
+                booking.setCompleted(rs.getBoolean("is_completed"));
                 bookings.add(booking);
             }
 
@@ -70,7 +71,7 @@ public class BookingDao {
 
     public List<Booking> getAllBookings() {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM booking ORDER BY date, time";
+        String  sql = "SELECT * FROM booking ORDER BY is_completed ASC, date, time";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -87,7 +88,7 @@ public class BookingDao {
                 booking.setDate(rs.getString("date"));
                 booking.setTime(rs.getString("time"));
                 booking.setMessage(rs.getString("message"));
-
+                booking.setCompleted(rs.getBoolean("is_completed"));
                 bookings.add(booking);
             }
 
@@ -96,6 +97,35 @@ public class BookingDao {
         }
 
         return bookings;
+    }
+
+    public boolean deleteBooking(int id) {
+        String sql = "DELETE FROM booking WHERE id = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean completeBooking(int bookingId) {
+        String sql = "UPDATE booking SET is_completed = TRUE WHERE id = ?";
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, bookingId);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

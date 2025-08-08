@@ -10,7 +10,7 @@ public class Booking {
     private String message;
     private String time;
     private  String date;
-
+    private  boolean isCompleted;
     public int getId() {
         return id;
     }
@@ -81,5 +81,13 @@ public class Booking {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
     }
 }

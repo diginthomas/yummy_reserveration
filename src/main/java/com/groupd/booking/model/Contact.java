@@ -1,25 +1,38 @@
 package com.groupd.booking.model;
 
+import java.sql.Timestamp;
+
 public class Contact {
-    private String Name;
-    private String Email;
+    private int id;
+    private String name;
+    private String email;
     private String subject;
     private String message;
+    private Timestamp date;
+
+    // Getters & Setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
 
     public String getSubject() {
@@ -36,5 +49,13 @@ public class Contact {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
     }
 }

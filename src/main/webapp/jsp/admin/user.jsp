@@ -239,9 +239,10 @@
     <ul class="nav">
       <li class="nav-item"><a href="${pageContext.request.contextPath}/admin" class="nav-link">Admin Home</a></li>
       <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/contact" class="nav-link">Contacts</a></li>
-      <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/view/menu" class="nav-link">menu</a></li>
+
       <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/users" class="nav-link">Users</a></li>
       <li class="nav-item"><a href="${pageContext.request.contextPath}/logout" class="nav-link">Logout</a></li>
+
     </ul>
   </nav>
     <h4 class="m-0 ms-auto me-3 text-secondary">Admin Dashboard</h4>
@@ -253,17 +254,26 @@
   <!-- Admin Dashboard Section -->
   <section id="admin-dashboard" class="dashboard-section">
     <div class="container section-title" data-aos="fade-up">
-      <h2>Manage Bookings</h2>
-      <p><span>All Upcoming</span> <span class="description-title">Reservations</span></p>
+      <h2>Manage Users</h2>
+      <c:if test="${not empty deleteSuccess}">
+        <div class="alert alert-success">${deleteSuccess}</div>
+        <c:remove var="deleteSuccess" scope="session"/>
+      </c:if>
+
+      <c:if test="${not empty deleteError}">
+        <div class="alert alert-danger">${deleteError}</div>
+        <c:remove var="deleteError" scope="session"/>
+      </c:if>
+
     </div>
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
       <div class="row">
         <div class="col-12">
           <c:choose>
-            <c:when test="${empty bookings}">
+            <c:when test="${empty users}">
               <div class="alert alert-info text-center" role="alert">
-                There are no upcoming bookings at this time.
+                no users found
               </div>
             </c:when>
             <c:otherwise>
@@ -271,61 +281,30 @@
                 <table class="table table-hover align-middle table-bookings">
                   <thead>
                   <tr>
-                    <th>ID</th>
+
 
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Phone</th>
-                    <th>People</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Message</th>
+
                     <th>Actions</th>
                   </tr>
                   </thead>
                   <tbody>
-                  <c:forEach var="booking" items="${bookings}">
-                    <tr style="${booking.completed ? 'text-decoration: line-through; color: #888; ' : ''}">
-                      <td>${booking.id}</td>
-                        <%--    <td>${booking.user_id}</td> --%>
-                      <td>${booking.name}</td>
-                      <td>${booking.email}</td>
-                      <td>${booking.phone}</td>
-                      <td>${booking.no_people}</td>
-                      <td>${booking.date}</td>
-                      <td>${booking.time}</td>
-                      <td>${booking.message}</td>
+                  <!-- Loop through bookings (replace with actual data from your backend) -->
+                  <c:forEach var="user" items="${users}">
+                    <tr>
+
+
+                      <td>${user.name}</td>
+                      <td>${user.email}</td>
 
                       <td>
-                        <div class="d-flex gap-2">
-
-                          <c:choose>
-                            <c:when test="${!booking.completed}">
-                              <form method="post" action="${pageContext.request.contextPath}/delete/booking"
-                                    onsubmit="return confirm('Delete this booking?');"
-                                    style="display:inline-block; margin: 0;">
-                                <input type="hidden" name="id" value="${booking.id}" />
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                              </form>
-                              <!-- Shown when NOT completed -->
-                              <form method="post" action="${pageContext.request.contextPath}/admin/booking/complete"
-                                    onsubmit="return confirm('Mark this booking as completed?');"
-                                    style="display:inline-block; margin: 0;">
-                                <input type="hidden" name="id" value="${booking.id}" />
-                                <button type="submit" class="btn btn-success btn-sm">Complete</button>
-                              </form>
-                            </c:when>
-
-                            <c:otherwise>
-                              <!-- Shown when completed -->
-                              <span class="badge bg-secondary">Completed</span>
-                            </c:otherwise>
-                          </c:choose>
-                        </div>
+                        <form method="post" action="${pageContext.request.contextPath}/admin/user/delete" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                          <input type="hidden" name="id" value="${user.id}" />
+                          <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                       </td>
                     </tr>
                   </c:forEach>
-
                   </tbody>
                 </table>
               </div>

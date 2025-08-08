@@ -264,7 +264,7 @@
       <ul class="nav">
         <li class="nav-item"><a href="${pageContext.request.contextPath}#hero" class="nav-link active">Home</a></li>
         <li class="nav-item"><a href="${pageContext.request.contextPath}#about" class="nav-link">About</a></li>
-
+        <li class="nav-item"><a href="${pageContext.request.contextPath}/menu" class="nav-link">Menu</a></li>
         <li class="nav-item"><a href="${pageContext.request.contextPath}/contact" class="nav-link">Contact</a></li>
         <% if (user == null) { %>
         <!-- If user not logged in -->
@@ -294,6 +294,14 @@
       <h2>Your Reservations</h2>
       <p><span>Manage Your</span> <span class="description-title">Bookings</span></p>
     </div>
+    <c:if test="${not empty sessionScope.deleteSuccess}">
+      <div class="alert alert-success">${sessionScope.deleteSuccess}</div>
+      <c:remove var="deleteSuccess" scope="session"/>
+    </c:if>
+    <c:if test="${not empty sessionScope.deleteError}">
+      <div class="alert alert-danger">${sessionScope.deleteError}</div>
+      <c:remove var="deleteError" scope="session"/>
+    </c:if>
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
       <div class="row justify-content-center">
@@ -317,10 +325,12 @@
                         onclick="alert('Confirmation sent for Booking ID: ${booking.id}')">
                   Send Confirmation Again
                 </button>
-                <button type="button" class="btn btn-danger"
-                        onclick="confirm('Are you sure you want to cancel Booking ID: ${booking.id}?')">
-                  Cancel Booking
-                </button>
+                <form method="post" action="${pageContext.request.contextPath}/delete/booking" onsubmit="return confirm('Delete this booking?');">
+                  <input type="hidden" name="id" value="${booking.id}" />
+                  <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+
+
               </div>
             </div>
           </c:forEach>

@@ -239,7 +239,7 @@
     <ul class="nav">
       <li class="nav-item"><a href="${pageContext.request.contextPath}/admin" class="nav-link">Admin Home</a></li>
       <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/contact" class="nav-link">Contacts</a></li>
-      <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/view/menu" class="nav-link">menu</a></li>
+
       <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/users" class="nav-link">Users</a></li>
       <li class="nav-item"><a href="${pageContext.request.contextPath}/logout" class="nav-link">Logout</a></li>
     </ul>
@@ -248,163 +248,63 @@
   </div>
 </header>
 
-<main class="main">
 
-  <!-- Admin Dashboard Section -->
-  <section id="admin-dashboard" class="dashboard-section">
-    <div class="container section-title" data-aos="fade-up">
-      <h2>Manage Bookings</h2>
-      <p><span>All Upcoming</span> <span class="description-title">Reservations</span></p>
-    </div>
+<main class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="mb-4 text-center">Add New Menu Item</h2>
+      <div class="card p-4">
+        <!-- Form for adding a new menu item with image upload -->
+        <form action="${pageContext.request.contextPath}/admin/add/menu" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="name" class="form-label">Item Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="E.g., Chicken Biryani" required>
+          </div>
+          <c:if test="${param.success eq 'true'}">
+            <div class="alert alert-success text-center" role="alert">
+              Menu item added successfully!
+            </div>
+          </c:if>
 
-    <div class="container" data-aos="fade-up" data-aos-delay="100">
-      <div class="row">
-        <div class="col-12">
-          <c:choose>
-            <c:when test="${empty bookings}">
-              <div class="alert alert-info text-center" role="alert">
-                There are no upcoming bookings at this time.
-              </div>
-            </c:when>
-            <c:otherwise>
-              <div class="table-responsive">
-                <table class="table table-hover align-middle table-bookings">
-                  <thead>
-                  <tr>
-                    <th>ID</th>
+          <c:if test="${param.error eq 'true'}">
+            <div class="alert alert-danger text-center" role="alert">
+              Failed to add menu item. Please try again.
+            </div>
+          </c:if>
 
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>People</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Message</th>
-                    <th>Actions</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <c:forEach var="booking" items="${bookings}">
-                    <tr style="${booking.completed ? 'text-decoration: line-through; color: #888; ' : ''}">
-                      <td>${booking.id}</td>
-                        <%--    <td>${booking.user_id}</td> --%>
-                      <td>${booking.name}</td>
-                      <td>${booking.email}</td>
-                      <td>${booking.phone}</td>
-                      <td>${booking.no_people}</td>
-                      <td>${booking.date}</td>
-                      <td>${booking.time}</td>
-                      <td>${booking.message}</td>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+          </div>
 
-                      <td>
-                        <div class="d-flex gap-2">
+          <div class="mb-3">
+            <label for="price" class="form-label">Price ($)</label>
+            <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+          </div>
 
-                          <c:choose>
-                            <c:when test="${!booking.completed}">
-                              <form method="post" action="${pageContext.request.contextPath}/delete/booking"
-                                    onsubmit="return confirm('Delete this booking?');"
-                                    style="display:inline-block; margin: 0;">
-                                <input type="hidden" name="id" value="${booking.id}" />
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                              </form>
-                              <!-- Shown when NOT completed -->
-                              <form method="post" action="${pageContext.request.contextPath}/admin/booking/complete"
-                                    onsubmit="return confirm('Mark this booking as completed?');"
-                                    style="display:inline-block; margin: 0;">
-                                <input type="hidden" name="id" value="${booking.id}" />
-                                <button type="submit" class="btn btn-success btn-sm">Complete</button>
-                              </form>
-                            </c:when>
-
-                            <c:otherwise>
-                              <!-- Shown when completed -->
-                              <span class="badge bg-secondary">Completed</span>
-                            </c:otherwise>
-                          </c:choose>
-                        </div>
-                      </td>
-                    </tr>
-                  </c:forEach>
-
-                  </tbody>
-                </table>
-              </div>
-            </c:otherwise>
-          </c:choose>
+          <div class="mb-3">
+            <label for="image" class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="image" name="image" placeholder="https://example.com/image.jpg" required>
+          </div>
 
 
-        </div>
+          <div class="text-center">
+            <input type="submit" class="btn btn-submit" value="Add Item">
+
+          </div>
+        </form>
       </div>
     </div>
-  </section>
-
+  </div>
 </main>
 
-<footer id="footer" class="footer bg-dark text-light pt-5">
-  <div class="container">
-    <div class="row gy-3">
-      <div class="col-lg-3 col-md-6 d-flex">
-        <i class="bi bi-geo-alt icon fs-3 me-2"></i>
-        <div class="address">
-          <h4>Address</h4>
-          <p>A108 Adam Street</p>
-          <p>New York, NY 535022</p>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-6 d-flex">
-        <i class="bi bi-telephone icon fs-3 me-2"></i>
-        <div>
-          <h4>Contact</h4>
-          <p>
-            <strong>Phone:</strong> <span>+1 5589 55488 55</span><br />
-            <strong>Email:</strong> <span>info@example.com</span><br />
-          </p>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-6 d-flex">
-        <i class="bi bi-clock icon fs-3 me-2"></i>
-        <div>
-          <h4>Opening Hours</h4>
-          <p>
-            <strong>Mon-Sat:</strong> <span>11AM - 11PM</span><br />
-            <strong>Sunday:</strong> <span>Closed</span>
-          </p>
-        </div>
-      </div>
-
-      <div class="col-lg-3 col-md-6">
-        <h4>Follow Us</h4>
-        <div class="social-links d-flex gap-3 fs-4">
-          <a href="#" class="text-light"><i class="bi bi-twitter"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
-          <a href="#" class="text-light"><i class="bi bi-linkedin"></i></a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="container text-center mt-4 pb-3 border-top border-secondary">
-    <p class="mb-0">© <strong class="px-1 sitename">Yummy</strong> All Rights Reserved</p>
-    <div class="credits">
-      Designed by
-      <a href="https://bootstrapmade.com/" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">BootstrapMade</a>
-      Distributed by
-      <a href="https://themewagon.com" class="text-decoration-none text-light" target="_blank" rel="noopener noreferrer">ThemeWagon</a>
-    </div>
-  </div>
+<footer class="bg-dark text-light text-center py-4 mt-5">
+  <p class="mb-0">© 2025 Yummy. All rights reserved. Designed by Group D.</p>
 </footer>
 
-<a href="#" id="scroll-top"
-   class="scroll-top d-flex align-items-center justify-content-center position-fixed bottom-0 end-0 m-3 btn btn-primary rounded-circle"
-   style="width: 40px; height: 40px; z-index: 9999;">
-  <i class="bi bi-arrow-up-short fs-4"></i>
-</a>
-
-<!-- Bootstrap Bundle JS -->
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
 
+<!-- ✅ No JS to block form submission -->
+</body>
 </html>

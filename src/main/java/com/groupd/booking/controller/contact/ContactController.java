@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 
 @WebServlet("/contact")
 public class ContactController extends HttpServlet {
@@ -23,6 +24,7 @@ public class ContactController extends HttpServlet {
         contact.setEmail(req.getParameter("email"));
         contact.setSubject(req.getParameter("subject"));
         contact.setMessage(req.getParameter("message"));
+        contact.setDate(new Timestamp(System.currentTimeMillis()));
 
         ContactDao dao = new ContactDao();
         boolean success = dao.saveContact(contact);
